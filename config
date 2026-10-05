@@ -1,0 +1,71 @@
+# ~/.config/newsboat/config
+# Entry point. Each include is one concern; delete a line to drop it.
+#   keys     every binding, vim grammar
+#   theme    colors, highlights, list/title formats
+#   filters  named filters, per-article highlights, junk rules
+# urls (feeds, tags, query feeds) and bookmark.sh live next to this file.
+
+include ~/.config/newsboat/keys
+include ~/.config/newsboat/theme
+include ~/.config/newsboat/filters
+
+# --- fetch -------------------------------------------------------------
+auto-reload yes
+reload-time 30
+reload-threads 16            # network bound, more threads just hammer hosts
+download-timeout 15          # one dead host must not stall the batch
+download-retries 2
+suppress-first-reload no     # reload runs in the background, ui stays usable
+reload-only-visible-feeds no
+download-full-page no        # feed content or nothing; full pages are what `o` is for
+user-agent "Mozilla/5.0 (X11; Linux x86_64) newsboat"   # some hosts 403 the default
+
+# --- cache -------------------------------------------------------------
+max-items 300                # per feed; cap keeps cache.db small and startup instant
+keep-articles-days 90
+cleanup-on-quit yes          # drop articles of feeds removed from urls
+delete-read-articles-on-quit no
+prepopulate-query-feeds yes  # query feeds show real unread counts at startup; costs ~100ms
+error-log ~/.local/share/newsboat/error.log
+
+# --- reading flow ------------------------------------------------------
+show-read-feeds no           # feed list = only what has unread; `u` toggles
+show-read-articles no      # old config had this; unread-only lists
+goto-next-feed yes           # `n` crosses feed boundaries
+openbrowser-and-mark-jumps-to-next-unread yes
+toggleitemread-jumps-to-next-unread yes
+mark-as-read-on-hover no
+article-sort-order date-asc    # newest first. yes, asc. newsboat admits this is backwards
+feed-sort-order none         # urls file order is the order; tags do the grouping
+text-width 90
+wrap-scroll yes
+scrolloff 8
+display-article-progress yes
+history-limit 200
+html-renderer internal       # no w3m/lynx installed, and internal is fastest anyway
+
+# --- prompts: only where data loss is possible -----------------------------
+confirm-exit no
+confirm-mark-feed-read no
+confirm-mark-all-feeds-read yes
+confirm-delete-all-articles yes
+
+# --- external programs ------------------------------------------------------
+# setsid -f: browser never blocks newsboat, even on cold start
+browser "setsid -f firefox --new-tab %u >/dev/null 2>&1"
+max-browser-tabs 15          # cap for `O` (open all unread)
+bookmark-cmd ~/.config/newsboat/bookmark.sh
+bookmark-autopilot yes       # no prompts, `b` and done
+bookmark-interactive no
+# WRITE YOUR PATH: folder for the S key (save all articles), then remove the leading #
+# save-path /path/to/your/folder
+notify-program notify-send
+notify-format "%d new articles (%n unread, %f feeds)"
+notify-always no
+
+# --- podboat (reads this same file) ----------------------------------------
+# WRITE YOUR PATH: folder for podcast downloads, then remove the leading #
+# download-path "/path/to/your/podcasts/%n/%F-%t.%e"
+max-downloads 3
+player "mpv --no-video"
+podcast-auto-enqueue no      # `e` enqueues on purpose, nothing automatic

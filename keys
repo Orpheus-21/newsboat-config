@@ -1,0 +1,95 @@
+# ~/.config/newsboat/keys
+# Vim grammar. Lowercase = the common thing, Shift = the bigger version.
+#   j/k gg G ^d ^u   move        h back   l/Enter open
+#   n/p              next/prev unread     J/K next/prev feed (article: next/prev article)
+#   o O              open in browser / open all unread + mark read
+#   y v d            yank url, play in mpv, download with yt-dlp
+#   x a A C          toggle read, read-all-above, feed read, all feeds read
+#   b s S e          bookmark, clip to Obsidian, save all (.txt), enqueue podcast
+#   t T f F ^f       tag pick/clear, filter pick/clear/type
+#   gs gS u ! ~      sort, reverse, show-read toggle (feeds) / links (article), flags, raw source
+#   r R E            reload, reload all, edit urls (reloads them after)
+#   D X $            delete, delete all, purge
+#   / ? : #          search, help, cmdline, open link by number
+# a multi-key bind kills the bare key (`gg` kills `g`), so every shadowed
+# default is rebound below. dialogs: feedlist articlelist article urlview
+# help filebrowser dirbrowser tagselection filterselection searchresultslist
+
+# --- move ---------------------------------------------------------------
+bind j everywhere down
+bind k everywhere up
+bind <C-d> everywhere halfpagedown
+bind <C-u> everywhere halfpageup
+bind gg everywhere home                       -- "Top"
+bind G everywhere end                         -- "Bottom"
+bind h articlelist,article,urlview,help,filebrowser,dirbrowser,tagselection,filterselection,searchresultslist quit -- "Back"
+bind l feedlist,articlelist,tagselection,filterselection,urlview open -- "Open"
+bind J articlelist next-feed                  -- "Next feed"
+bind K articlelist prev-feed                  -- "Prev feed"
+bind J article next                           -- "Next article"
+bind K article prev                           -- "Prev article"
+bind n everywhere next-unread
+bind p everywhere prev-unread
+bind <C-n> everywhere next-unread-feed
+bind <C-p> everywhere prev-unread-feed
+
+# --- open / send elsewhere ------------------------------------------------
+# noninteractively = no curses suspend, no flicker; browser is setsid'd anyway
+bind o everywhere open-in-browser-noninteractively -- "Open in Firefox"
+bind O feedlist,articlelist open-all-unread-in-browser-and-mark-read -- "Open all unread, mark read"
+# `set browser` sticks for the session, hence the reset after every one-shot
+bind y articlelist,article,urlview set browser "wl-copy %u" ; open-in-browser-noninteractively ; set browser "setsid -f firefox --new-tab %u >/dev/null 2>&1" -- "Yank URL"
+bind v articlelist,article set browser "setsid -f mpv --really-quiet -- %u >/dev/null 2>&1" ; open-in-browser-noninteractively ; set browser "setsid -f firefox --new-tab %u >/dev/null 2>&1" -- "Play in mpv"
+bind V article set browser "setsid -f mpv --no-video -- %u >/dev/null 2>&1" ; one ; set browser "setsid -f firefox --new-tab %u >/dev/null 2>&1" -- "Play enclosure (podcast) in mpv"
+bind d articlelist,article set browser "setsid -f ~/.config/newsboat/dl.sh %u >/dev/null 2>&1" ; open-in-browser-noninteractively ; set browser "setsid -f firefox --new-tab %u >/dev/null 2>&1" -- "Download with yt-dlp"
+bind b articlelist,article,urlview bookmark    -- "Bookmark to a Markdown file"
+bind s articlelist,article pipe-to "~/.config/newsboat/clip.sh" -- "Clip to an Obsidian folder"
+bind S articlelist save-all                    -- "Save all articles"
+bind e articlelist,article enqueue             -- "Enqueue podcast"
+bind | articlelist,article pipe-to             -- "Pipe article to command"
+
+# --- read state ---------------------------------------------------------
+bind x articlelist,article toggle-article-read -- "Toggle read"
+bind a articlelist mark-all-above-as-read      -- "Mark all above read"
+bind A feedlist,articlelist mark-feed-read     -- "Mark feed read"
+bind C feedlist mark-all-feeds-read            -- "Mark ALL feeds read"
+bind ! articlelist,article edit-flags          -- "Edit flags"
+
+# --- view ----------------------------------------------------------------
+bind gs feedlist,articlelist sort              -- "Sort"
+bind gS feedlist,articlelist rev-sort          -- "Sort reversed"
+bind u feedlist toggle-show-read-feeds         -- "Toggle read feeds"
+bind u articlelist,article show-urls           -- "Links in article"
+bind ~ article toggle-source-view              -- "Raw source"
+bind t feedlist,articlelist select-tag         -- "Pick tag"
+bind T feedlist,articlelist clear-tag          -- "Clear tag"
+bind f feedlist,articlelist select-filter      -- "Pick filter"
+bind F feedlist,articlelist clear-filter       -- "Clear filter"
+bind <C-f> feedlist,articlelist set-filter     -- "Type a filter"
+bind / everywhere open-search
+# `#` = goto-url stays default (bind refuses a literal #)
+bind : everywhere cmdline
+bind ? everywhere help
+bind <C-l> everywhere redraw
+
+# --- feeds & housekeeping -------------------------------------------------
+bind r feedlist,articlelist reload             -- "Reload feed"
+bind R feedlist,articlelist reload-all         -- "Reload all"
+bind E feedlist edit-urls ; reload-urls        -- "Edit urls, apply"
+bind D articlelist,article delete-article      -- "Delete article"
+bind X articlelist delete-all-articles         -- "Delete all in feed"
+bind $ feedlist,articlelist purge-deleted      -- "Purge deleted"
+bind q everywhere quit
+bind Q everywhere hard-quit
+
+# --- podboat ------------------------------------------------------------
+bind j podboat down
+bind k podboat up
+bind gg podboat home
+bind G podboat end
+bind d podboat pb-download                     -- "Download"
+bind p podboat pb-play                         -- "Play"
+bind x podboat pb-mark-as-finished             -- "Mark finished"
+bind D podboat pb-delete                       -- "Delete"
+bind P podboat pb-purge                        -- "Purge finished"
+bind a podboat pb-toggle-download-all          -- "Download everything"

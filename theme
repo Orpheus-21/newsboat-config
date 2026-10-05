@@ -1,0 +1,50 @@
+# ~/.config/newsboat/theme
+# Named ANSI colors + `default` background only: follows whatever the
+# terminal (Omarchy theme) is showing. No hex, no sync script.
+
+# --- chrome ------------------------------------------------------------
+color background          default default
+color listnormal          default default
+color listnormal_unread   default default bold
+color listfocus           black   blue
+color listfocus_unread    black   blue   bold
+color info                black   blue           # status bar
+color title               blue    default bold   # dialog title line
+color article             default default
+color end-of-text-marker  color8  default
+color hint-key            yellow  default bold
+color hint-keys-delimiter color8  default
+color hint-separator      color8  default
+color hint-description    default default
+search-highlight-colors   black   yellow bold
+
+# --- article view -------------------------------------------------------
+# regexes run per rendered line; anchored and few on purpose
+highlight article "^Title: .*"                         yellow  default bold
+highlight article "^(Feed|Author|Date|Flags|Podcast Download URL|Links): " color8 default
+highlight article "^Link: .*"                          blue    default
+highlight article "https?://[^ >]+"                    blue    default underline
+highlight article "\\[[0-9]+\\]"                       magenta default bold  # [3] link refs, pair with `#`
+highlight article "\\[image [0-9]+[^]]*\\]"            color8  default
+highlight article "^\\[[0-9]+\\]: "                    magenta default       # link table at bottom
+
+# --- lists ---------------------------------------------------------------
+# feedlist:    idx dl-status unread-flag  unread/total  title ......... tag
+# articlelist: idx flags date  [feed if query]  title ......... length
+feedlist-format     "%4i %S%n %11u  %t%> %T "
+articlelist-format  "%4i %f %-12D  %?T?%-18T  ?%t%> %L "
+datetime-format     "%b %d %H:%M"
+
+# --- titles: drop the "Newsboat r2.44 -" prefix everywhere ---------------------
+feedlist-title-format     "%?T?[%T] &?Feeds  %u with unread / %t%?F?  ·  filter: %F&?"
+articlelist-title-format  "%T  %u unread / %t%?F?  ·  filter: %F&?"
+itemview-title-format     "%T  ·  %u unread"
+searchresult-title-format "Search '%s'  %u unread / %t%?F?  ·  filter: %F&?"
+selecttag-title-format    "Tags"
+selecttag-format          "%4i  %T%>  %n unread in %u feeds"
+selectfilter-title-format "Filters"
+urlview-title-format      "Links"
+help-title-format         "Keys"
+dialogs-title-format      "Dialogs"
+filebrowser-title-format  "%?O?Open&Save? %f"
+dirbrowser-title-format   "%?O?Open&Save? %f"

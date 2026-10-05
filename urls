@@ -1,0 +1,14 @@
+# ~/.config/newsboat/urls
+# one feed per line:  URL  "~Display name"  tag tag ...
+# tags starting with ! are hidden from the tag picker (pure filters for queries).
+# query feeds are virtual; they sit on top so `l` on line 1 is always "everything unread".
+# E edits this file and reloads it.
+
+"query:▸ Unread:unread = \"yes\""
+"query:▸ Today:age <= 0 and unread = \"yes\""
+"query:▸ Flagged:flags != \"\""
+"query:▸ Videos:tags # \"video\" and unread = \"yes\""
+"query:▸ Podcasts:enclosure_type =~ \"^audio\" and unread = \"yes\""
+
+# --- feeds ------------------------------------------------------------------
+https://hnrss.org/frontpage                tech  "~Hacker News"

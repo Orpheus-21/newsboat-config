@@ -1,0 +1,21 @@
+# ~/.config/newsboat/filters
+# `f` picks a named filter. Filter language: man newsboat, "Filter Language".
+
+define-filter "Today"        "age <= 0"
+define-filter "This week"    "age <= 7"
+define-filter "Unread"       "unread = \"yes\""
+define-filter "Flagged"      "flags != \"\""
+define-filter "Videos"       "link =~ \"youtube.com|youtu.be|vimeo.com|odysee.com\""
+define-filter "Podcasts"     "enclosure_type =~ \"^audio\""
+define-filter "Dead feeds"   "latest_article_age > 60"
+
+# --- list highlights (filter expr, not regex) ---------------------------------
+highlight-article "age <= 0"     green  default
+highlight-article "flags != \"\"" yellow default bold
+
+# --- junk: never even stored ---------------------------------------------------
+# ignore-mode download = dropped at fetch. switch to `display` while testing a
+# new rule; a wrong `download` rule silently loses articles for good.
+ignore-mode download
+ignore-article "*" "title =~ \"^(Sponsored|SPONSORED|Sponsor:|Promo:|\\[Sponsor)\""
+ignore-article "*" "link =~ \"youtube\\.com/shorts/\""
